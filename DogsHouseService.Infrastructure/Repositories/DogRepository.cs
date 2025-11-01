@@ -19,9 +19,48 @@ namespace DogsHouseService.Infrastructure.Repositories
             _context = context;
         }
 
-		public async Task<IEnumerable<Dog>> GetAllAsync()
+		public async Task<IEnumerable<Dog>> GetAllAsync(
+			int pageNumber, int pageSize,
+			string? attribute, string? order)
 		{
-			return await _context.Dogs.ToListAsync();
+			var query = _context.Dogs.AsQueryable();
+
+			if(!string.IsNullOrEmpty(attribute))
+			{
+				var isDescending = "desc".Equals(order, StringComparison.OrdinalIgnoreCase);
+
+				query = attribute.ToLower() switch
+				{
+					"name" => isDescending
+						? query.OrderByDescending(d => d.Name) 
+						: query.OrderBy(d => d.Name),
+
+					"color" => isDescending
+						? query.OrderByDescending(d => d.Color)
+						: query.OrderBy(d => d.Color),
+
+					"tail_length" => isDescending
+						? query.OrderByDescending(d => d.TailLength)
+						: query.OrderBy(d => d.TailLength),
+
+					"weight" => isDescending
+						? query.OrderByDescending(d => d.Weight)
+						: query.OrderBy(d => d.Weight),
+
+					_ => query.OrderBy(d => d.Id),
+				};
+				
+			}
+			else
+			{
+				query = query.OrderBy(d => d.Id);
+			}
+
+			var pagedQuery = query
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize);
+
+			return await pagedQuery.ToListAsync();
 		}
 
 		public async Task<Dog> CreateAsync(Dog dog)

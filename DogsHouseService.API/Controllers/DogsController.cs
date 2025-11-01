@@ -28,9 +28,14 @@ namespace DogsHouseService.API.Controllers
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<Dog>))]
 		[Route("/dogs")]
-		public async Task<IActionResult> GetAllDogs()
+		public async Task<IActionResult> GetAllDogs(
+			[FromQuery] int pageNumber = 1,
+			[FromQuery] int pageSize = 10,
+			[FromQuery] string? attribute = null,
+			[FromQuery] string? order = null
+		)
 		{
-			var dogs = await _dogRepository.GetAllAsync();
+			var dogs = await _dogRepository.GetAllAsync(pageNumber, pageSize, attribute, order);
 			return Ok(dogs);
 		}
 
