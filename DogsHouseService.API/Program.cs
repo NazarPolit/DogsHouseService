@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore.Design;
 using DogsHouseService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation.AspNetCore;
 using DogsHouseService.Application.Interfaces;
 using DogsHouseService.Infrastructure.Repositories;
+using FluentValidation;
+using DogsHouseService.Application.DTOs;
+using DogsHouseService.Application.Validators;
 
 namespace DogsHouseService.API
 {
@@ -18,6 +22,9 @@ namespace DogsHouseService.API
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 			builder.Services.AddScoped<IDogRepository, DogRepository>();
+
+			builder.Services.AddFluentValidationAutoValidation();
+			builder.Services.AddValidatorsFromAssemblyContaining<CreateDogRequestValidator>();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
