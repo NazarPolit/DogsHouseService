@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DogsHouseService.Application\DogsHouseService.Application.csproj" />
     <ProjectReference Include="..\DogsHouseService.Domain\DogsHouseService.Domain.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore.Design;
 using DogsHouseService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using DogsHouseService.Application.Interfaces;
+using DogsHouseService.Infrastructure.Repositories;
 
 namespace DogsHouseService.API
 {
@@ -14,12 +16,16 @@ namespace DogsHouseService.API
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+			builder.Services.AddScoped<IDogRepository, DogRepository>();
+
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
 			{
-				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+				options.UseSqlServer(builder.Configuration
+					.GetConnectionString("DefaultConnection"));
 			});
 
 			var app = builder.Build();
