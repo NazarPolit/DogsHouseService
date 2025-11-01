@@ -9,6 +9,9 @@ namespace DogsHouseService.Application.Interfaces
 {
 	public interface IDogRepository
 	{
-		Task<IEnumerable<Dog>> GetPagedAsync(int pageNumber, int pageSize);
+		Task<IEnumerable<Dog>> GetAllAsync();
+		Task<Dog> CreateAsync(Dog dog);
+		Task<bool> Save();
+		Task<bool> DogExistsAsync(string name);
 	}
 }
