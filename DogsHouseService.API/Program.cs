@@ -5,9 +5,11 @@ using FluentValidation.AspNetCore;
 using DogsHouseService.Application.Interfaces;
 using DogsHouseService.Infrastructure.Repositories;
 using FluentValidation;
+using System.Threading.RateLimiting;
 using DogsHouseService.Application.DTOs;
 using DogsHouseService.Application.Validators;
 using DogsHouseService.Application.Common.Mappings;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace DogsHouseService.API
 {
@@ -28,6 +30,21 @@ namespace DogsHouseService.API
 
 			builder.Services.AddFluentValidationAutoValidation();
 			builder.Services.AddValidatorsFromAssemblyContaining<CreateDogRequestValidator>();
+
+			builder.Services.AddRateLimiter(options =>
+			{
+				options.AddFixedWindowLimiter(policyName: "fixed", limiterOptions =>
+				{
+					limiterOptions.Window = TimeSpan.FromSeconds(1);
+
+					limiterOptions.PermitLimit = 10;
+
+					limiterOptions.QueueLimit = 0;
+					limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+				});
+
+				options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+			});
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
