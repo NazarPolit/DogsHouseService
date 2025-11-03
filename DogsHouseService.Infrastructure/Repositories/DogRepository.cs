@@ -84,5 +84,6 @@ namespace DogsHouseService.Infrastructure.Repositories
 			return await _context.Dogs
 				.AnyAsync(dog => dog.Name.ToLower() == name.ToLower());
 		}
+
 	}
 }

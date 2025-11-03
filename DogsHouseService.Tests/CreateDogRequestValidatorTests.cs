@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using FluentAssertions;
-using FluentValidation.TestHelper; // Спеціальний хелпер
+using FluentValidation.TestHelper; 
 using DogsHouseService.Application.DTOs;
 using DogsHouseService.Application.Validators;
 
