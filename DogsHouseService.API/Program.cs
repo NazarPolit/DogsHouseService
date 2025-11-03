@@ -33,18 +33,20 @@ namespace DogsHouseService.API
 
 			builder.Services.AddRateLimiter(options =>
 			{
-				options.AddFixedWindowLimiter(policyName: "fixed", limiterOptions =>
-				{
-					limiterOptions.Window = TimeSpan.FromSeconds(1);
-
-					limiterOptions.PermitLimit = 10;
-
-					limiterOptions.QueueLimit = 0;
-					limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-				});
+				options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(_ =>
+					RateLimitPartition.GetFixedWindowLimiter(
+						"global",
+						_ => new FixedWindowRateLimiterOptions
+						{
+							PermitLimit = 10,
+							Window = TimeSpan.FromSeconds(1),
+							QueueLimit = 0,
+							QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+						}));
 
 				options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 			});
+
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
@@ -66,12 +68,17 @@ namespace DogsHouseService.API
 
 			app.UseHttpsRedirection();
 
+			app.UseRateLimiter();
+
 			app.UseAuthorization();
 
 
 			app.MapControllers();
 
 			app.Run();
+
 		}
+
 	}
+
 }
