@@ -1,6 +1,6 @@
 # Dogs House Service (.NET 8)
 
-This is a REST API service written in ASP.NET Core 8 for a test task. It implements basic CRUD operations for managing dogs, featuring pagination, sorting, validation, and rate limiting.
+This is a REST API service written in ASP.NET Core 8 for a test task. It implements basic operations for managing dogs, featuring pagination, sorting, validation, and rate limiting.
 
 ## 🚀 Tech Stack
 
